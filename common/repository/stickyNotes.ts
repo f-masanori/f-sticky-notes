@@ -1,7 +1,8 @@
 // import { TStickyNote } from "@/components/SNboard/models";
 
+const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL_PROD;
 export const createSN = async ({ uid, st, token }: CreateSNProps) => {
-  const res = await fetch("http://localhost:8080/stickyNote", {
+  const res = await fetch(baseUrl + "/stickyNote", {
     method: "POST",
     mode: "cors", // no-cors, *cors, same-origin
     redirect: "follow", // manual, *follow, error
@@ -41,7 +42,7 @@ export type TStickyNote = {
 
 export const getSN = async ({ uid, token }: GetSNProps) => {
   // const res = await fetch('https://f-sticky-notes.work/api/stickyNote', {
-  const res = await fetch("http://localhost:8080/stickyNote", {
+  const res = await fetch(baseUrl + "/stickyNote", {
     method: "GET",
     mode: "cors", // no-cors, *cors, same-origin
     redirect: "follow", // manual, *follow, error
@@ -58,7 +59,7 @@ export const getSN = async ({ uid, token }: GetSNProps) => {
 };
 
 export const updateSN = async ({ uid, st, token }: CreateSNProps) => {
-  const res = await fetch("http://localhost:8080/stickyNote", {
+  const res = await fetch(baseUrl + "/stickyNote", {
     method: "PUT",
     mode: "cors", // no-cors, *cors, same-origin
     redirect: "follow",
@@ -83,7 +84,7 @@ type getGroupRes = {
   label: string;
 }[];
 export const getGroup = async ({ uid, token }) => {
-  const res = await fetch("http://localhost:8080/stickyNoteGroups", {
+  const res = await fetch(baseUrl + "/stickyNoteGroups", {
     method: "GET",
     mode: "cors", // no-cors, *cors, same-origin
     redirect: "follow", // manual, *follow, error
@@ -101,7 +102,7 @@ export const getGroup = async ({ uid, token }) => {
 };
 
 export const createGroup = async ({ uid, token }) => {
-  const res = await fetch("http://localhost:8080/stickyNoteGroups", {
+  const res = await fetch(baseUrl + "/stickyNoteGroups", {
     method: "POST",
     mode: "cors", // no-cors, *cors, same-origin
     redirect: "follow", // manual, *follow, error
@@ -129,7 +130,7 @@ export const updateGroup = async ({
   groupID,
   groupLabel,
 }: UpdateSNPGrouprops) => {
-  const res = await fetch("http://localhost:8080/stickyNoteGroups", {
+  const res = await fetch(baseUrl + "/stickyNoteGroups", {
     method: "PUT",
     mode: "cors", // no-cors, *cors, same-origin
     redirect: "follow",
