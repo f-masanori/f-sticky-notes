@@ -1,0 +1,17 @@
+{
+  "extends": "./tsconfig.json",
+  "include": [
+    "src/**/*.js",
+    "src/**/*.jsx",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "pages/**/*.js",
+    "pages/**/*.jsx",
+    "pages/**/*.ts",
+    "pages/**/*.tsx"
+  ],
+  "exclude": ["node_modules"],
+  "import/parsers": {
+    "@typescript-eslint/parser": [".ts", ".tsx"]
+  }
+}

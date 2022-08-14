@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "outDir": "../dist/a",
+    "target": "es5",
+    // "module": "es2015",
+    "downlevelIteration": true,
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    // "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "baseUrl": "./",
+    // 参照されるprojectは、compositeをtrueにする必要がある
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true
+  },
+  "references": [],
+  "include": ["**/*.ts", "**/*.tsx"]
+}
