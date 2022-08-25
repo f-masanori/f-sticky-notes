@@ -18,11 +18,18 @@
     "baseUrl": "./",
     "paths": {
       "@/*": ["./src/*"],
-      "s@/*": ["../common/*"]
+      "s@/*": ["../share/*"]
     },
     "strict": false
   },
   // "references": [{ "path": "../common" }],
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.js", "**/*.tsx", "../common/**/*.ts"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.js",
+    "**/*.tsx",
+    "../share/**/*.ts",
+    "../share/**/*.tsx"
+  ],
   "exclude": ["node_modules"]
 }

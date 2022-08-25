@@ -10,7 +10,7 @@
     "pages/**/*.ts",
     "pages/**/*.tsx"
   ],
-  "exclude": ["node_modules", ".next"],
+  "exclude": ["node_modules"],
   "import/parsers": {
     "@typescript-eslint/parser": [".ts", ".tsx"]
   }

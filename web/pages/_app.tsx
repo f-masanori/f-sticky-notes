@@ -5,8 +5,8 @@ import { useRouter } from 'next/router'
 import React from 'react'
 import { Loading } from '@/uiComponents/Loading'
 import { Header } from '@/uiComponents/header'
-import { UserContext, UserProvider } from '@/context/user'
-import { signInWithGoogle, auth } from '@/firebase/auth'
+import { UserContext, UserProvider } from 's@/context/user'
+import { signInWithGoogle, auth } from 's@/services/firebase/auth'
 import '@/styles/styles.css'
 
 import 'tailwindcss/tailwind.css'
@@ -19,7 +19,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
     signOut(auth)
       .then(() => {
         // setUserInfo({ uid: '', email: '' })
-        router.push('/top')
+        router.push('/SNboard')
         location.reload()
         console.log('ログアウトしました')
       })
@@ -72,7 +72,7 @@ const AuthStateWrapper: React.FC<AuthStateWrapperProps> = ({ children, path }) =
         const email = user.email
         if (userInfo.uid !== uid) {
           setUserInfo({ uid, email: email || '', token })
-          // router.push(path)
+          router.push('/SNboard')
         }
       } else {
         if (userInfo.uid !== '') setUserInfo({ uid: '', email: '', token: '' })
@@ -89,7 +89,7 @@ const AuthStateWrapper: React.FC<AuthStateWrapperProps> = ({ children, path }) =
     return <Loading></Loading>
   } else {
     if (router.pathname === '/login') {
-      router.push('/top')
+      router.push('/SNboard')
       return <Loading></Loading>
     }
     return <>{children}</>

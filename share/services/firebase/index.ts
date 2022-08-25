@@ -1,5 +1,5 @@
-import '@/firebase/auth'
-import { initializeApp } from 'firebase/app'
+import "firebase/auth";
+import { initializeApp } from "firebase/app";
 
 export const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_APIKEY,
@@ -10,5 +10,5 @@ export const firebaseConfig = {
   messagingSenderId: process.env.NEXT_PUBLIC_messagingSenderId,
   appId: process.env.NEXT_PUBLIC_appId,
   measurementId: process.env.NEXT_PUBLIC_measurementId,
-}
-export const firebaseApp = initializeApp(firebaseConfig)
+};
+export const firebaseApp = initializeApp(firebaseConfig);

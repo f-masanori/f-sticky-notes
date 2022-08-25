@@ -42,11 +42,11 @@ const theme = {
   paragraph: 'editor-paragraph',
   quote: 'editor-quote',
   heading: {
-    h1: 'editor-heading-h1 text-6xl',
-    h2: 'editor-heading-h2',
-    h3: 'editor-heading-h3',
-    h4: 'editor-heading-h4',
-    h5: 'editor-heading-h5',
+    h1: 'text-[28px] font-bold',
+    h2: 'text-[24px] font-semibold',
+    h3: 'text-[20px] font-medium',
+    h4: 'text-[16px]',
+    h5: 'text-[12px]',
   },
   list: {
     nested: {

@@ -3,7 +3,7 @@ module.exports = {
   content: [
     './src/**/*.{js,ts,jsx,tsx}',
     './pages/**/*.{js,ts,jsx,tsx}',
-    '../common/**/*.{js,ts,jsx,tsx}',
+    '../share/pages/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
     extend: {},

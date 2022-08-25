@@ -3,7 +3,7 @@ import { IoIosSettings } from 'react-icons/io'
 import { Rnd } from 'react-rnd'
 
 import LexiEditer from '@/components/common/lexical'
-import { UserContext } from '@/context/user'
+import { UserContext } from 's@/context/user'
 
 import { useStickyNote } from 'src/components/SNboard/hooks/stickyNote'
 import { TStickyNote } from 'src/components/SNboard/models'
@@ -28,21 +28,24 @@ export const StickyNote = ({
 }) => {
   const userInfo = React.useContext(UserContext).userInfo
 
-  const { onDragStop, onResizeStop, onResizing, TARef, onFocus, isFocus } = useStickyNote({
-    sn: {
-      id,
-      x,
-      y,
-      groupID: info.groupID,
-      width,
-      height,
-      zIndex,
-      value,
-      willSave: info.willSave,
-    },
-    setSNList,
-    userInfo,
-  })
+  const { onDragStop, onResizeStop, onResizing, onDragStart, TARef, onFocus, isFocus } =
+    useStickyNote({
+      sn: {
+        id,
+        x,
+        y,
+        groupID: info.groupID,
+        width,
+        height,
+        zIndex,
+        value,
+        willSave: info.willSave,
+      },
+      setSNList,
+      userInfo,
+      setMaxZIndex,
+      maxZIndex,
+    })
   const snColor = 'bg-cyan-200'
   const snHeaderColor = 'bg-cyan-300'
   return (
@@ -59,6 +62,7 @@ export const StickyNote = ({
       onResizeStop={onResizeStop}
       onResize={onResizing}
       onDragStop={onDragStop}
+      onDragStart={onDragStart}
       enableResizing={{
         top: true,
         right: true,

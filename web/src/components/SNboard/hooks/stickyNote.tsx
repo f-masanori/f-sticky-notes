@@ -1,33 +1,33 @@
-import React from "react";
-import type { DraggableEventHandler } from "react-draggable";
-import type {
-  RndDragEvent,
-  RndDragCallback,
-  RndResizeCallback,
-} from "react-rnd";
+import React from 'react'
+import type { DraggableEventHandler } from 'react-draggable'
+import type { RndDragEvent, RndDragCallback, RndResizeCallback } from 'react-rnd'
 
-import { UserContext, UserInfo } from "@/context/user";
+import { UserContext, UserInfo } from 's@/context/user'
 
-import { TStickyNote } from "src/components/SNboard/models";
-import { updateSN } from "s@/repository/stickyNotes";
+import { TStickyNote } from 'src/components/SNboard/models'
+import { updateSN } from 's@/repository/stickyNotes'
 
 type UseStickyNoteProps = {
-  sn: TStickyNote;
-  setSNList: React.Dispatch<React.SetStateAction<TStickyNote[]>>;
-  userInfo: UserInfo;
-};
+  sn: TStickyNote
+  setSNList: React.Dispatch<React.SetStateAction<TStickyNote[]>>
+  userInfo: UserInfo
+  setMaxZIndex
+  maxZIndex
+}
 
 export const useStickyNote = ({
   sn: { value, x, y, id, width, height, zIndex, groupID },
   setSNList,
   userInfo,
+  setMaxZIndex,
+  maxZIndex,
 }: UseStickyNoteProps) => {
-  const TARef = React.useRef<HTMLTextAreaElement>(null);
+  const TARef = React.useRef<HTMLTextAreaElement>(null)
 
-  const [isFocus, setIsFocus] = React.useState(false);
+  const [isFocus, setIsFocus] = React.useState(false)
 
   const onDragStop: DraggableEventHandler = (e, d) => {
-    const newY = d.y < 0 ? 0 : d.y;
+    const newY = d.y < 0 ? 0 : d.y
 
     if (d.x !== x || newY !== y) {
       const newSN: TStickyNote = {
@@ -40,27 +40,32 @@ export const useStickyNote = ({
         value,
         zIndex: zIndex,
         willSave: false,
-      };
+      }
 
       setSNList((v) =>
         v.map((sn) => {
-          console.log(sn.id);
-          console.log(id);
+          console.log(sn.id)
+          console.log(id)
 
-          if (sn.id === id) return { ...newSN };
-          return sn;
-        })
-      );
+          if (sn.id === id) return { ...newSN }
+          return sn
+        }),
+      )
     }
-  };
+  }
 
-  const onResizeStop: RndResizeCallback = (
-    p,
-    direction,
-    ref,
-    delta,
-    position
-  ) => {
+  const onDragStart: DraggableEventHandler = () => {
+    console.log(9)
+    setMaxZIndex((v) => v + 1)
+    setSNList((v) =>
+      v.map((x) => {
+        if (x.id === id) return { ...x, zIndex: maxZIndex + 1 }
+        return x
+      }),
+    )
+  }
+
+  const onResizeStop: RndResizeCallback = (p, direction, ref, delta, position) => {
     if (width !== ref.style.width || height !== ref.style.height) {
       const newSN: TStickyNote = {
         id,
@@ -72,24 +77,18 @@ export const useStickyNote = ({
         value,
         zIndex: zIndex,
         willSave: true,
-      };
+      }
 
       setSNList((v) =>
         v.map((sn) => {
-          if (sn.id === id) return { ...newSN };
-          return sn;
-        })
-      );
+          if (sn.id === id) return { ...newSN }
+          return sn
+        }),
+      )
     }
-  };
+  }
 
-  const onResizing: RndResizeCallback = (
-    p,
-    direction,
-    ref,
-    delta,
-    position
-  ) => {
+  const onResizing: RndResizeCallback = (p, direction, ref, delta, position) => {
     const newSN: TStickyNote = {
       id,
       groupID,
@@ -100,25 +99,26 @@ export const useStickyNote = ({
       value,
       zIndex: zIndex,
       willSave: true,
-    };
+    }
     setSNList((v) =>
       v.map((sn) => {
-        if (sn.id === id) return { ...newSN };
-        return sn;
-      })
-    );
-  };
+        if (sn.id === id) return { ...newSN }
+        return sn
+      }),
+    )
+  }
 
   const onFocus = () => {
-    setIsFocus(true);
-  };
+    setIsFocus(true)
+  }
 
   return {
     onResizeStop,
     onResizing,
+    onDragStart,
     onDragStop,
     TARef,
     onFocus,
     isFocus,
-  };
-};
+  }
+}

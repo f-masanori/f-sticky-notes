@@ -1,7 +1,7 @@
 import Link, { LinkProps } from 'next/link'
 import PropTypes from 'prop-types'
 import React from 'react'
-import { UserContext, UserInfo, UserProvider } from '@/context/user'
+import { UserContext, UserInfo, UserProvider } from 's@/context/user'
 
 export const Header = ({
   // userInfo,

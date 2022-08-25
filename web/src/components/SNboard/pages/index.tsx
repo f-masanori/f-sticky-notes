@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { UserContext } from '@/context/user'
+import { UserContext } from 's@/context/user'
 
 import { useStickyNote } from 'src/components/SNboard/hooks/stickyNote'
 import { TStickyNote } from 'src/components/SNboard/models'
