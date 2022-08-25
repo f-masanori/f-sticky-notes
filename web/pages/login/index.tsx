@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import React from 'react'
-import { signInWithGoogle, auth } from '@/firebase/auth'
+import { signInWithGoogle, auth } from 's@/services/firebase/auth'
 
 export const SignUp = () => {
   const router = useRouter()
