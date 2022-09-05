@@ -6,10 +6,9 @@ import type {
   RndResizeCallback,
 } from "react-rnd";
 
-import { UserContext, UserInfo } from "share/core/context/users";
+import { UserContext, UserInfo } from "../core/context/users";
 
-import { TStickyNote } from "share/models";
-import { updateSN } from "share/repository/stickyNotes";
+import { TStickyNote } from "../models";
 
 type UseStickyNoteProps = {
   sn: TStickyNote;
