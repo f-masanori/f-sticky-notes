@@ -1,4 +1,4 @@
-import { Board } from '@/components/SNboard/pages'
+import { Board } from 's@/components/SNboard'
 
 const SNNoteBoard = () => {
   return <Board />

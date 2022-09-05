@@ -22,7 +22,6 @@
     },
     "strict": false
   },
-  // "references": [{ "path": "../common" }],
   "include": [
     "next-env.d.ts",
     "**/*.ts",
@@ -31,5 +30,11 @@
     "../share/**/*.ts",
     "../share/**/*.tsx"
   ],
+  "references": [
+    {
+      "path": "../share"
+    }
+  ],
+  "workspaces": ["share"],
   "exclude": ["node_modules"]
 }

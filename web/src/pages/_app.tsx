@@ -3,9 +3,9 @@ import type { User } from 'firebase/auth'
 import { AppProps } from 'next/app'
 import { useRouter } from 'next/router'
 import React from 'react'
-import { Loading } from '@/uiComponents/Loading'
-import { Header } from '@/uiComponents/header'
-import { UserContext, UserProvider } from 's@/context/user'
+import { Loading } from 's@/core/uiComponents/Loading'
+import { Header } from 's@/core/uiComponents/header'
+import { UserContext, UserProvider } from 's@/core/context/users'
 import { signInWithGoogle, auth } from 's@/services/firebase/auth'
 import '@/styles/styles.css'
 
@@ -57,8 +57,6 @@ const AuthStateWrapper: React.FC<AuthStateWrapperProps> = ({ children, path }) =
   const router = useRouter()
   const setUserInfo = React.useContext(UserContext).setUserInfo
   const userInfo = React.useContext(UserContext).userInfo
-
-  console.info('AuthWrapper')
 
   const [isAuthVerificationLoading, setIsAuthVerificationLoading] = React.useState(true)
 

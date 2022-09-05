@@ -18,11 +18,14 @@
     "jsx": "preserve",
     "incremental": true,
     "baseUrl": "./",
-    // 参照されるprojectは、compositeをtrueにする必要がある
+    "paths": {
+      "share/*": ["./*"],
+      "@/*": ["./*"]
+    },
     "composite": true,
     "declaration": true,
     "declarationMap": true
   },
   "references": [],
-  "include": ["**/*.ts", "**/*.tsx"]
+  "include": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx"]
 }
