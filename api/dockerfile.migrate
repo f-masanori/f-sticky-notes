@@ -1,0 +1,8 @@
+FROM ubuntu:18.04
+RUN apt-get update && apt-get upgrade -y \
+&& apt-get install -y curl gnupg2 vim \
+&& curl -L https://github.com/golang-migrate/migrate/releases/download/v4.11.0/migrate.linux-amd64.tar.gz | tar xvz\
+&& mv ./migrate.linux-amd64 /usr/bin/migrate
+
+ENV MYSQL_URL='mysql://stdb:password@tcp(rdb:3306)/stdb?multiStatements=true'
+CMD ["bash"]

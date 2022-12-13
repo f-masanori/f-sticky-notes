@@ -1,0 +1,50 @@
+version: "3.8"
+
+services:
+  rdb:
+    image: mysql:5.7
+    platform: linux/amd64
+    container_name: rdb
+    volumes:
+      - ./DBVolume/db:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=stdb
+      - MYSQL_USER=stdb
+      - MYSQL_PASSWORD=password
+    ports:
+      - 3306:3306
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 5s
+      retries: 10
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: dev
+    tty: true
+    volumes:
+      - ./go:/go/src/app
+    ports:
+      - "8080:8080"
+    depends_on:
+      rdb:
+        condition: service_healthy
+    environment:
+      ENV: local
+
+  rdb_migrate:
+    container_name: rdb_migrate
+    build:
+      context: .
+      dockerfile: dockerfile.migrate
+    tty: true
+    volumes:
+      - ./db/migrations:/tmp/migrations
+    depends_on:
+      rdb:
+        condition: service_healthy
+    profiles:
+      - extra

@@ -50,8 +50,7 @@ export const useBoard = () => {
 
   return { uid, token, SNList, saveStickyNote, setSNList };
 };
-const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL_PROD;
-
+const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 const fetcher = (url: string, args: GetSNProps) => {
   return fetch(url + "/stickyNote", {
     method: "GET",

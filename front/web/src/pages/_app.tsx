@@ -10,15 +10,14 @@ import { signInWithGoogle, auth } from 's@/services/firebase/auth'
 import '@/styles/styles.css'
 
 import 'tailwindcss/tailwind.css'
+console.log(process.env.NEXT_PUBLIC_APP_ENV)
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
-  console.log('MyApp')
   const router = useRouter()
 
   const clickLogout = async function () {
     signOut(auth)
       .then(() => {
-        // setUserInfo({ uid: '', email: '' })
         router.push('/SNboard')
         location.reload()
         console.log('ログアウトしました')
@@ -54,6 +53,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
 export default MyApp
 type AuthStateWrapperProps = { children: React.ReactNode; path: string }
 const AuthStateWrapper: React.FC<AuthStateWrapperProps> = ({ children, path }) => {
+  console.log({ path })
   const router = useRouter()
   const setUserInfo = React.useContext(UserContext).setUserInfo
   const userInfo = React.useContext(UserContext).userInfo
@@ -70,7 +70,7 @@ const AuthStateWrapper: React.FC<AuthStateWrapperProps> = ({ children, path }) =
         const email = user.email
         if (userInfo.uid !== uid) {
           setUserInfo({ uid, email: email || '', token })
-          router.push('/SNboard')
+          router.push(path)
         }
       } else {
         if (userInfo.uid !== '') setUserInfo({ uid: '', email: '', token: '' })

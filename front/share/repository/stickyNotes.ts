@@ -1,6 +1,6 @@
 // import { TStickyNote } from "@/components/SNboard/models";
 
-const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL_PROD;
+const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 export const createSN = async ({ uid, st, token }: CreateSNProps) => {
   const res = await fetch(baseUrl + "/stickyNote", {
     method: "POST",
