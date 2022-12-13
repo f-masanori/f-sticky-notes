@@ -1,6 +1,7 @@
 CREATE TABLE IF NOT EXISTS sticky_notes(
     `id` varchar(50) NOT NULL PRIMARY KEY,
     `uid` varchar(50) NOT NULL,
+    `group_id` varchar(50) NOT NULL DEFAULT "",
     `value` text NOT NULL,
     `x` int NOT NULL,
     `y` int NOT NULL,
