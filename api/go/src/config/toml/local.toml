@@ -1,0 +1,9 @@
+[db]
+db_name = "stdb"
+host = "rdb"
+user = "stdb"
+password = "password"
+port = "3306"
+gorm_log_mode = true
+ssl_mode = "disable"
+
