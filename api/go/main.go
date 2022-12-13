@@ -55,8 +55,8 @@ func getRouter(useCases UseCases) *gin.Engine {
 	r.POST("/stickyNote", api.POSTStickyNoteHandler(useCases.StickyNote))
 	r.PUT("/stickyNote", api.PUTStickyNoteHandler(useCases.StickyNote))
 
-	r.PUT("/loginHistory", api.PUTStickyNoteHandler(useCases.StickyNote))
-	r.OPTIONS("/loginHistory", api.OPTIONSLoginHistoryHandler(useCases.LoginHistory, useCases.StickyNote, useCases.StickyNoteGroups))
+	// r.PUT("/loginHistory", api.PUTStickyNoteHandler(useCases.StickyNote))
+	r.POST("/loginHistory", api.POSTLoginHistoryHandler(useCases.LoginHistory, useCases.StickyNote, useCases.StickyNoteGroups))
 
 	r.GET("/stickyNoteGroups", api.GETStickyNoteGroupHandler(useCases.StickyNoteGroups))
 	r.POST("/stickyNoteGroups", api.POSTStickyNoteGroupHandler(useCases.StickyNoteGroups))
