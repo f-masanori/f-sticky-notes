@@ -28,12 +28,8 @@
     "**/*.js",
     "**/*.tsx",
     "../share/**/*.ts",
-    "../share/**/*.tsx"
-  ],
-  "references": [
-    {
-      "path": "../share"
-    }
+    "../share/**/*.tsx",
+    "src/pages/canvas"
   ],
   "workspaces": ["share"],
   "exclude": ["node_modules"]
