@@ -9,7 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func PUTLoginHistory(useCase usecase.LoginHistoryUseCase, SNUsecase usecase.SNUseCase, SNGroupUsecase usecase.SNGroupUseCase) gin.HandlerFunc {
+func OPTIONSLoginHistoryHandler(useCase usecase.LoginHistoryUseCase, SNUsecase usecase.SNUseCase, SNGroupUsecase usecase.SNGroupUseCase) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		var req POSTStickyNote
 		if err := c.ShouldBindJSON(&req); err != nil {

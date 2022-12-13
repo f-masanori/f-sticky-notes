@@ -8,3 +8,19 @@
 ```
 $ migrate -database ${MYSQL_URL} -path /tmp/migrations up
 ```
+
+## DB のテーブルの追加するとき
+
+- DB のマイグレーション
+  DB マイグレーションコンテナに入る
+
+```
+$ docker exec -it rdb_migrate /bin/bash
+```
+
+以下のコマンドを実行
+
+```
+
+$ migrate create -ext sql -dir /tmp/migrations -seq (sqlファイル名)
+```

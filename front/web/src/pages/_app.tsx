@@ -69,12 +69,24 @@ const AuthStateWrapper: React.FC<AuthStateWrapperProps> = ({ children, path }) =
         const uid = user.uid
         const email = user.email
         if (userInfo.uid !== uid) {
+          const res = await fetch(process.env.NEXT_PUBLIC_API_BASE_URL + '/loginHistory', {
+            method: 'POST',
+            mode: 'cors', // no-cors, *cors, same-origin
+            redirect: 'follow', // manual, *follow, error
+            referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+            headers: {
+              'Content-Type': 'application/json',
+              uid: uid,
+              token: token,
+            },
+          })
+          console.log(res.json())
           setUserInfo({ uid, email: email || '', token })
           router.push(path)
         }
       } else {
         if (userInfo.uid !== '') setUserInfo({ uid: '', email: '', token: '' })
-        if (userInfo.uid === '') router.push('/login')
+        router.push('/login')
       }
       setIsAuthVerificationLoading(false)
     })
