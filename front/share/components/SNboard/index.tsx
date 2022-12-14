@@ -22,9 +22,6 @@ import { Loading } from "../../core/uiComponents/Loading";
 // TODO: useBoardを作って作ってカスタムフックにし無駄なレンダリングをなくす
 
 export const Board = () => {
-  // const userInfo = React.useContext(UserContext).userInfo;
-  // const uid = userInfo.uid;
-  // const token = userInfo.token;
   const { uid, token, SNList, saveStickyNote, setSNList } = useBoard();
   React.useEffect(() => {
     if (SNList !== undefined) {

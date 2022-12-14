@@ -55,7 +55,8 @@ func getRouter(useCases UseCases) *gin.Engine {
 	r.POST("/stickyNote", api.POSTStickyNoteHandler(useCases.StickyNote))
 	r.PUT("/stickyNote", api.PUTStickyNoteHandler(useCases.StickyNote))
 
-	r.PUT("/loginHistory", api.PUTStickyNoteHandler(useCases.StickyNote))
+	// r.PUT("/loginHistory", api.PUTStickyNoteHandler(useCases.StickyNote))
+	r.POST("/loginHistory", api.POSTLoginHistoryHandler(useCases.LoginHistory, useCases.StickyNote, useCases.StickyNoteGroups))
 
 	r.GET("/stickyNoteGroups", api.GETStickyNoteGroupHandler(useCases.StickyNoteGroups))
 	r.POST("/stickyNoteGroups", api.POSTStickyNoteGroupHandler(useCases.StickyNoteGroups))
@@ -70,16 +71,19 @@ func getRouter(useCases UseCases) *gin.Engine {
 type UseCases struct {
 	StickyNote       usecase.SNUseCase
 	StickyNoteGroups usecase.SNGroupUseCase
+	LoginHistory     usecase.LoginHistoryUseCase
 }
 
 func inject() UseCases {
 	authDB := db.GetDBConnection()
 	SNUseCase := usecase.NewSNUseCase(pers.NewSNRepositoryImpl(authDB))
 	SNGroupUseCase := usecase.NewSNGroupUseCase(pers.NewSNGroupRepositoryImpl(authDB))
+	LoginHistory := usecase.NewLoginHistoryUseCase(pers.NewLoginHistoryRepositoryImpl(authDB))
 
 	u := UseCases{
 		StickyNote:       SNUseCase,
 		StickyNoteGroups: SNGroupUseCase,
+		LoginHistory:     LoginHistory,
 	}
 	return u
 }

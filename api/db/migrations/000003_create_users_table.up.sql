@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS users(
+    `uid` varchar(50) NOT NULL PRIMARY KEY,
+    `name` varchar(50) NOT NULL,
+    `login_count` int NOT NULL,
+    `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE = InnoDB DEFAULT CHARSET = utf8;

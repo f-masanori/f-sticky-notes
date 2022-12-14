@@ -1,6 +1,7 @@
 package api
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/f-masanori/linqumate-auth/src/domain/models"
@@ -9,24 +10,22 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func PUTLoginHistory(useCase usecase.LoginHistoryUseCase, SNUsecase usecase.SNUseCase, SNGroupUsecase usecase.SNGroupUseCase) gin.HandlerFunc {
+func POSTLoginHistoryHandler(useCase usecase.LoginHistoryUseCase, SNUsecase usecase.SNUseCase, SNGroupUsecase usecase.SNGroupUseCase) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var req POSTStickyNote
-		if err := c.ShouldBindJSON(&req); err != nil {
-			// TODO: エラー設計
-			fmt.Println(err)
-			// c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			ErrorResponse(c, "ok", err)
+		uid := c.Request.Header.Get("uid")
+		if uid == "" {
+			ErrorResponse(c, "err", errors.New("uidがセットされていません。"))
 			return
 		}
-		uid := c.Request.Header.Get("uid")
 		isFirstLogin, err := useCase.IsFirstTimeLogin(uid)
 		if err != nil {
 			fmt.Println(err)
 			ErrorResponse(c, "err", err)
 		}
+
 		if isFirstLogin {
 			// 初期化
+			fmt.Println("初期化処理実行")
 			sng, err := SNGroupUsecase.CreateSNoteGroups(uid)
 			if err != nil {
 				fmt.Println(err)
@@ -44,13 +43,19 @@ func PUTLoginHistory(useCase usecase.LoginHistoryUseCase, SNUsecase usecase.SNUs
 				GroupID: sng.ID,
 				Height:  "200px",
 				Width:   "200px",
-				X:       20,
-				Y:       30,
-				Value:   "",
+				X:       200,
+				Y:       300,
+				Value:   `{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}`,
 			}
 			SNUsecase.CreateNotes(*sampleSN)
-		} else {
 			// loginHistoryに追加
+			err = useCase.CreateUser(uid)
+			if err != nil {
+				ErrorResponse(c, "err", err)
+				return
+			}
+		} else {
+			// 更新処理
 		}
 
 		SuccessResponse(c, err)

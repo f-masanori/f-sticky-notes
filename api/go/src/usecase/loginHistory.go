@@ -18,8 +18,12 @@ func (u *LoginHistoryUseCase) IsFirstTimeLogin(uid string) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	if lh != nil {
+	if lh == nil {
 		return true, nil
 	}
 	return false, nil
+}
+
+func (u *LoginHistoryUseCase) CreateUser(uid string) error {
+	return u.repo.UpdateLoginHistory(uid)
 }

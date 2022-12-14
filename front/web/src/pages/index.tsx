@@ -6,7 +6,7 @@ const IndexPage = () => {
   return (
     <p>
       <Link href='/login'>
-        <a>login</a>
+        <a>To Login Page</a>
       </Link>
     </p>
   )

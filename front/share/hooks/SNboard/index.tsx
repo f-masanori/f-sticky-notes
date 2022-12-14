@@ -38,14 +38,15 @@ export const useBoard = () => {
     }
 
     const saveTarget = SNList.filter((v) => v.willSave);
-    console.log({ saveTarget });
-    saveTarget.forEach((v) => {
-      updateSN({ st: v, uid, token });
-    });
-    setSNList((v) => {
-      return v.map((x) => ({ ...x, willSave: false }));
-    });
-    setSavedCount((v) => v + 1);
+    if (saveTarget.length !== 0) {
+      saveTarget.forEach((v) => {
+        updateSN({ st: v, uid, token });
+      });
+      setSNList((v) => {
+        return v.map((x) => ({ ...x, willSave: false }));
+      });
+      setSavedCount((v) => v + 1);
+    }
   };
 
   return { uid, token, SNList, saveStickyNote, setSNList };
