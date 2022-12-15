@@ -6,24 +6,23 @@ import React from 'react'
 import { Loading } from 's@/core/uiComponents/Loading'
 import { Header } from 's@/core/uiComponents/header'
 import { UserContext, UserProvider } from 's@/core/context/users'
-import { signInWithGoogle, auth } from 's@/services/firebase/auth'
+import { auth } from 's@/services/firebase/auth'
 import '@/styles/styles.css'
 
 import 'tailwindcss/tailwind.css'
-console.log(process.env.NEXT_PUBLIC_APP_ENV)
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   const router = useRouter()
 
-  const clickLogout = async function () {
+  const clickLogout = async () => {
     signOut(auth)
       .then(() => {
         router.push('/SNboard')
         location.reload()
-        console.log('ログアウトしました')
+        console.log('Logged out successfully')
       })
       .catch((error) => {
-        console.log(`ログアウト時にエラーが発生しました (${error})`)
+        console.log(`An error occurred  (${error})`)
       })
   }
 
@@ -37,6 +36,7 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
       </>
     )
   }
+
   return (
     <UserProvider>
       {router.pathname === '/top' ? (
@@ -51,9 +51,9 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
 }
 
 export default MyApp
+
 type AuthStateWrapperProps = { children: React.ReactNode; path: string }
 const AuthStateWrapper: React.FC<AuthStateWrapperProps> = ({ children, path }) => {
-  console.log({ path })
   const router = useRouter()
   const setUserInfo = React.useContext(UserContext).setUserInfo
   const userInfo = React.useContext(UserContext).userInfo
@@ -80,7 +80,6 @@ const AuthStateWrapper: React.FC<AuthStateWrapperProps> = ({ children, path }) =
               token: token,
             },
           })
-          console.log(res.json())
           setUserInfo({ uid, email: email || '', token })
           router.push(path)
         }

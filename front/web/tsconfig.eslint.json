@@ -1,16 +1,7 @@
 {
   "extends": "./tsconfig.json",
-  "include": [
-    "src/**/*.js",
-    "src/**/*.jsx",
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "pages/**/*.js",
-    "pages/**/*.jsx",
-    "pages/**/*.ts",
-    "pages/**/*.tsx"
-  ],
-  "exclude": ["node_modules", ".next"],
+  "include": ["src/**/*.js", "src/**/*.jsx", "src/**/*.ts", "src/**/*.tsx"],
+  "exclude": ["node_modules", ".next", "postcss.config.js"],
   "import/parsers": {
     "@typescript-eslint/parser": [".ts", ".tsx"]
   }
