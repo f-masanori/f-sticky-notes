@@ -31,34 +31,29 @@ export const useStickyNote = ({
 
   const onDragStop: DraggableEventHandler = (e, d) => {
     const newY = d.y < 0 ? 0 : d.y;
+    const newX = d.x < 257 ? 257 : d.x;
 
-    if (d.x !== x || newY !== y) {
-      const newSN: TStickyNote = {
-        id: id,
-        x: d.x,
-        y: newY,
-        groupID,
-        width,
-        height,
-        value,
-        zIndex: zIndex,
-        willSave: false,
-      };
+    const newSN: TStickyNote = {
+      id: id,
+      x: newX,
+      y: newY,
+      groupID,
+      width,
+      height,
+      value,
+      zIndex: zIndex,
+      willSave: false,
+    };
 
-      setSNList((v) =>
-        v.map((sn) => {
-          console.log(sn.id);
-          console.log(id);
-
-          if (sn.id === id) return { ...newSN };
-          return sn;
-        })
-      );
-    }
+    setSNList((v) =>
+      v.map((sn) => {
+        if (sn.id === id) return { ...newSN };
+        return sn;
+      })
+    );
   };
 
   const onDragStart: DraggableEventHandler = () => {
-    console.log(9);
     setMaxZIndex((v) => v + 1);
     setSNList((v) =>
       v.map((x) => {
@@ -75,26 +70,27 @@ export const useStickyNote = ({
     delta,
     position
   ) => {
-    if (width !== ref.style.width || height !== ref.style.height) {
-      const newSN: TStickyNote = {
-        id,
-        groupID,
-        x,
-        y,
-        width: ref.style.width,
-        height: ref.style.height,
-        value,
-        zIndex: zIndex,
-        willSave: true,
-      };
+    const newY = position.y < 0 ? 0 : position.y;
+    const newX = position.x < 257 ? 257 : position.x;
 
-      setSNList((v) =>
-        v.map((sn) => {
-          if (sn.id === id) return { ...newSN };
-          return sn;
-        })
-      );
-    }
+    const newSN: TStickyNote = {
+      id,
+      groupID,
+      x: newX,
+      y: newY,
+      width,
+      height,
+      value,
+      zIndex: zIndex,
+      willSave: true,
+    };
+
+    setSNList((v) =>
+      v.map((sn) => {
+        if (sn.id === id) return { ...newSN };
+        return sn;
+      })
+    );
   };
 
   const onResizing: RndResizeCallback = (

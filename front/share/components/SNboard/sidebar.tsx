@@ -4,7 +4,7 @@ import React from "react";
 import ClickAwayListener from "react-click-away-listener";
 import { BsThreeDots } from "react-icons/bs";
 import { HiOutlinePlusCircle } from "react-icons/hi";
-
+import { PencilAltIcon } from "@heroicons/react/outline";
 import { useFloating, shift, offset, flip } from "@floating-ui/react-dom";
 
 export type SidebarProps = {
@@ -57,7 +57,7 @@ export const Sidebar = ({
           style={{ zIndex: "9999999" }}
           aria-label="Sidebar"
         >
-          <div className="overflow-y-auto py-1 px-1 ml-1 bg-gray-50 rounded dark:bg-gray-800">
+          <div className="h-[700px] overflow-y-auto py-1 px-1 ml-1 mb-1 bg-gray-50 rounded dark:bg-gray-800">
             <ul className="space-y-1">
               {SNGroupList.map((v) => {
                 return (
@@ -194,13 +194,16 @@ const SettingArea = ({
   groupID: string;
 }) => {
   return (
-    <div className="bg-gray-300 hover:bg-gray-500 text-white font-bold p-2">
-      <button
-        className=" px-1 hover:bg-slate-200 "
-        onClick={() => renameBtnHandler(groupID)}
-      >
-        Rename
-      </button>
+    <div className="bg-gray-100 p-1 w-48 rounded-sm border-slate-300 border drop-shadow-md">
+      <div className=" px-1 hover:bg-slate-200 hover:bg-gray-300">
+        <button onClick={() => renameBtnHandler(groupID)}>
+          <PencilAltIcon className="h-5 w-5 inline" />
+          グループ名編集
+        </button>
+      </div>
+      <div className=" px-1 hover:bg-slate-200 hover:bg-gray-300">
+        <button>[WIP]削除</button>
+      </div>
     </div>
   );
 };

@@ -12,6 +12,9 @@ import {
   getGroup,
   updateGroup,
 } from "../../repository/stickyNotes";
+import { Sidebar, SidebarProps } from "../../components/SNboard/sidebar";
+import { backendApi } from "../../repository/common";
+
 export type GetSNProps = {
   uid: string;
   token: string;
@@ -49,31 +52,48 @@ export const useBoard = () => {
     }
   };
 
-  return { uid, token, SNList, saveStickyNote, setSNList };
-};
-const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
-const fetcher = (url: string, args: GetSNProps) => {
-  return fetch(url + "/stickyNote", {
-    method: "GET",
-    mode: "cors", // no-cors, *cors, same-origin
-    redirect: "follow", // manual, *follow, error
-    referrerPolicy: "no-referrer",
-    headers: {
-      "Content-Type": "application/json",
-      uid: args.uid,
-      token: args.token,
-    },
-  })
-    .then((res) => {
-      return res.json();
-    })
-    .catch((e) => {
-      console.error(e);
-    });
+  React.useEffect(() => {
+    if (SNList !== undefined) {
+    }
+  }, [SNList]);
+
+  const [currentGroup, setCurrentGroup] = React.useState<
+    SidebarProps["currentGroup"]
+  >({
+    id: "",
+    label: "",
+  });
+  const [SNGroupList, setSNGroupList] =
+    React.useState<SidebarProps["SNGroupList"]>(undefined);
+  const changeGroupName = ({ id, label }) => {
+    console.log(id, label);
+    setSNGroupList((v) =>
+      v.map((x) => {
+        if (x.id === id) return { ...x, label };
+        return x;
+      })
+    );
+  };
+
+  return {
+    uid,
+    token,
+    SNList,
+    saveStickyNote,
+    setSNList,
+    changeGroupName,
+    setSNGroupList,
+    setCurrentGroup,
+    SNGroupList,
+    currentGroup,
+  };
 };
 
 export const useSNFetcher = ({ uid, token }: GetSNProps) => {
   // TODO: エラーハンドリング
-  const { data, error } = useSWR([baseUrl, { uid, token }], fetcher);
+  const { data, error } = useSWR(
+    ["/stickyNote", { uid, token }],
+    backendApi("/stickyNote", uid, token).GET
+  );
   return data;
 };
