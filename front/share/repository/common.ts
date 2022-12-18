@@ -1,11 +1,25 @@
-export const backendApi = (url: string, uid, token) => {
+export const backendApi = (uid, token) => {
   return {
-    GET: () =>
+    GET: (url: string) =>
       fetch(process.env.NEXT_PUBLIC_API_BASE_URL + url, {
         method: "GET",
         mode: "cors",
-        redirect: "follow",
-        referrerPolicy: "no-referrer",
+        headers: {
+          "Content-Type": "application/json",
+          uid,
+          token,
+        },
+      })
+        .then((res) => {
+          return res.json();
+        })
+        .catch((e) => {
+          console.error(e);
+        }),
+    POST: (url: string) =>
+      fetch(process.env.NEXT_PUBLIC_API_BASE_URL + url, {
+        method: "POST",
+        mode: "cors",
         headers: {
           "Content-Type": "application/json",
           uid,

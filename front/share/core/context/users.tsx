@@ -11,6 +11,19 @@ export type TUserContext = {
   setUserInfo: React.Dispatch<UserInfo>;
 };
 
+export const createUserContext = ({
+  uid,
+  email,
+}: {
+  uid: string;
+  email: string;
+}) => {
+  return React.createContext<TUserContext>({
+    userInfo: { uid, email },
+    setUserInfo: () => {},
+  });
+};
+
 export const UserContext = React.createContext<TUserContext>({
   userInfo: { uid: "", email: "" },
   setUserInfo: () => {},
@@ -18,15 +31,23 @@ export const UserContext = React.createContext<TUserContext>({
 
 type UserProviderProps = {
   children: React.ReactNode;
+  uid: string;
+  email: string;
 };
 
-export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
+export const UserProvider: React.FC<UserProviderProps> = ({
+  children,
+  uid,
+  email,
+}) => {
   const [userInfo, setUserInfo] = React.useState<UserInfo>({
-    uid: "",
-    email: "",
+    uid: uid,
+    email,
   });
+  React.useEffect(() => {
+    setUserInfo({ uid, email });
+  }, [uid, email]);
 
-  console.log("UserProvider");
   return (
     <UserContext.Provider value={{ userInfo, setUserInfo }}>
       {children}

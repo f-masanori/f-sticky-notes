@@ -42,7 +42,7 @@ export const useStickyNote = ({
       height,
       value,
       zIndex: zIndex,
-      willSave: false,
+      willSave: true,
     };
 
     setSNList((v) =>
@@ -109,7 +109,7 @@ export const useStickyNote = ({
       height: ref.style.height,
       value,
       zIndex: zIndex,
-      willSave: true,
+      willSave: false,
     };
     setSNList((v) =>
       v.map((sn) => {
