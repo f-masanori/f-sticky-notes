@@ -121,7 +121,7 @@ const Board = ({
   };
   const handleCreateSN = () => {
     const newSN: TStickyNote = {
-      id: getNewSNID(),
+      id: getNewSNID(), //TODO: サーバーサイドで付番する
       groupID: currentGroup.id,
       value:
         '{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}',
@@ -197,7 +197,14 @@ const Board = ({
           return (
             <StickyNoteMemo
               key={st.id}
-              {...{ ...props, setSNList, setMaxZIndex, maxZIndex, info: st }}
+              {...{
+                ...props,
+                setSNList,
+                setMaxZIndex,
+                maxZIndex,
+                info: st,
+                isAppleMode,
+              }}
             />
           );
         })}
@@ -214,6 +221,7 @@ const StickyNoteMemo = (
     setSNList: React.Dispatch<React.SetStateAction<TStickyNote[]>>;
     setMaxZIndex: React.Dispatch<React.SetStateAction<number>>;
     maxZIndex: number;
+    isAppleMode: boolean;
   }
 ) => {
   const Memo = React.useMemo(() => {

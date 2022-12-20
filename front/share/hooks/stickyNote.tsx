@@ -123,6 +123,24 @@ export const useStickyNote = ({
     setIsFocus(true);
   };
 
+  const onClick = () => {
+    setMaxZIndex((v) => v + 1);
+    setSNList((v) =>
+      v.map((x) => {
+        if (x.id === id) return { ...x, zIndex: maxZIndex + 1 };
+        return x;
+      })
+    );
+  };
+
+  const onChange = (newValue: string) => {
+    setSNList((v) =>
+      v.map((sn) => {
+        if (sn.id === id) return { ...sn, value: newValue, willSave: true };
+        return sn;
+      })
+    );
+  };
   return {
     onResizeStop,
     onResizing,
@@ -131,5 +149,7 @@ export const useStickyNote = ({
     TARef,
     onFocus,
     isFocus,
+    onClick,
+    onChange,
   };
 };

@@ -1,5 +1,4 @@
 import React from "react";
-import { IoIosSettings } from "react-icons/io";
 import { Rnd } from "react-rnd";
 
 import LexiEditer from "./lexical";
@@ -21,11 +20,13 @@ export const StickyNote = ({
   zIndex,
   setMaxZIndex,
   maxZIndex,
+  isAppleMode,
 }: TStickyNote & {
   info: TStickyNote;
   setSNList: React.Dispatch<React.SetStateAction<TStickyNote[]>>;
   setMaxZIndex: React.Dispatch<React.SetStateAction<number>>;
   maxZIndex: number;
+  isAppleMode: boolean;
 }) => {
   const userInfo = React.useContext(UserContext).userInfo;
 
@@ -37,6 +38,8 @@ export const StickyNote = ({
     TARef,
     onFocus,
     isFocus,
+    onClick,
+    onChange,
   } = useStickyNote({
     sn: {
       id,
@@ -81,47 +84,37 @@ export const StickyNote = ({
         bottomLeft: true,
         topLeft: true,
       }}
-      onClick={() => {
-        console.log(1);
-        setMaxZIndex((v) => v + 1);
-        setSNList((v) =>
-          v.map((x) => {
-            if (x.id === id) return { ...x, zIndex: maxZIndex + 1 };
-            return x;
-          })
-        );
-      }}
+      onClick={onClick}
     >
-      <div>
-        <div className={`handle ${snHeaderColor} h-4`}>
-          <div></div>
+      {isAppleMode ? (
+        <div>
+          <div
+            className={`handle ${snHeaderColor} h-4 flex justify-end align-middle`}
+          >
+            <div className={`h-2 w-2 mt-1 mr-1 bg-orange-500`}></div>
+          </div>
         </div>
-
-        <LexiEditer
-          onChange={(newValue: string) => {
-            console.log("onchange");
-            setSNList((v) =>
-              v.map((sn) => {
-                if (sn.id === id)
-                  return { ...sn, value: newValue, willSave: true };
-                return sn;
-              })
-            );
-          }}
-          initValue={value}
-          containerProps={{
-            style: {
-              resize: "none",
-              width: addPx(width, "-8px"),
-              height: addPx(height, "-72px"),
-              border: "0px",
-              outline: "none",
-              zIndex: 1,
-              overflowY: "scroll",
-            },
-          }}
-        />
-      </div>
+      ) : (
+        <div>
+          <div className={`handle ${snHeaderColor} h-4`}></div>
+        </div>
+      )}
+      <LexiEditer
+        onChange={onChange}
+        isAppleMode={isAppleMode}
+        initValue={value}
+        containerProps={{
+          style: {
+            resize: "none",
+            width: addPx(width, "-8px"),
+            height: addPx(height, "-72px"),
+            border: "0px",
+            outline: "none",
+            zIndex: 1,
+            overflowY: "scroll",
+          },
+        }}
+      />
     </Rnd>
   );
 };

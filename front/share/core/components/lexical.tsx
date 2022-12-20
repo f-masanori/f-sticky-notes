@@ -16,7 +16,6 @@ import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
 import { ListPlugin } from "@lexical/react/LexicalListPlugin";
 import { MarkdownShortcutPlugin } from "@lexical/react/LexicalMarkdownShortcutPlugin";
 import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
-import { PlainTextPlugin } from "@lexical/react/LexicalPlainTextPlugin";
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import { HeadingNode, QuoteNode } from "@lexical/rich-text";
 import { TableCellNode, TableNode, TableRowNode } from "@lexical/table";
@@ -122,10 +121,12 @@ const Editor = ({
   containerProps,
   initValue,
   onChange: _onChange,
+  isAppleMode,
 }: {
   containerProps: any;
   initValue: any;
   onChange: any;
+  isAppleMode: boolean;
 }) => {
   const initialConfig = {
     namespace: "MyEditor",
@@ -151,7 +152,7 @@ const Editor = ({
   return (
     <>
       <LexicalComposer initialConfig={initialConfig}>
-        <ToolbarPlugin />
+        {isAppleMode ? null : <ToolbarPlugin />}
         <div className="editor-inner">
           <RichTextPlugin
             contentEditable={
