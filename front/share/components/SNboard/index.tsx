@@ -7,7 +7,7 @@ import { StickyNote } from "../../core/components/stickyNote";
 import { getNewSNID } from "../../utils/newID";
 
 import { Sidebar, SidebarProps } from "../../components/SNboard/sidebar";
-import { useSNFetcher, useBoard } from "../../hooks/SNboard";
+import { useBoard } from "../../hooks/SNboard";
 
 import {
   createSN,
@@ -21,7 +21,7 @@ import { Loading } from "../../core/uiComponents/Loading";
 
 // TODO: useBoardを作って作ってカスタムフックにし無駄なレンダリングをなくす
 
-export const Board = () => {
+export const BoardContainer = () => {
   const {
     uid,
     token,
@@ -45,6 +45,7 @@ export const Board = () => {
     onUpdate: () => {
       saveStickyNote();
     },
+    ms: 2000,
   });
 
   React.useEffect(() => {
@@ -66,7 +67,7 @@ export const Board = () => {
   return isLoading ? (
     <Loading />
   ) : (
-    <HOme
+    <Board
       {...{
         SNList,
         setSNList,
@@ -83,7 +84,7 @@ export const Board = () => {
   );
 };
 
-const HOme = ({
+const Board = ({
   SNList,
   setSNList,
   setMaxZIndex,
@@ -111,6 +112,7 @@ const HOme = ({
   const uid = React.useContext(UserContext).userInfo.uid;
   const token = React.useContext(UserContext).userInfo.token;
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(true);
+  const [isAppleMode, setIsAppleMode] = React.useState(true);
 
   const handleCreateGroup = async () => {
     const g = await createGroup({ uid, token });
@@ -119,7 +121,7 @@ const HOme = ({
   };
   const handleCreateSN = () => {
     const newSN: TStickyNote = {
-      id: getNewSNID(),
+      id: getNewSNID(), //TODO: サーバーサイドで付番する
       groupID: currentGroup.id,
       value:
         '{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}',
@@ -162,6 +164,24 @@ const HOme = ({
         >
           付箋追加
         </button>
+        <div className="z-[10000] fixed right-6 mt-10 font-bold">
+          <div>りんごモード</div>
+          <input
+            type="checkbox"
+            checked={isAppleMode}
+            className="peer sr-only"
+          />
+          <span
+            onClick={(e) => {
+              setIsAppleMode(!isAppleMode);
+            }}
+            className="block w-[2em] cursor-pointer bg-gray-500 rounded-full 
+      p-[1px] after:block after:h-[1em] after:w-[1em] after:rounded-full 
+      after:bg-white after:transition peer-checked:bg-blue-500 
+      peer-checked:after:translate-x-[calc(100%-2px)]"
+          ></span>
+          {/* {{ isCheck }} */}
+        </div>
         {shownSNList.map((st) => {
           const props: TStickyNote = {
             id: st.id,
@@ -177,7 +197,14 @@ const HOme = ({
           return (
             <StickyNoteMemo
               key={st.id}
-              {...{ ...props, setSNList, setMaxZIndex, maxZIndex, info: st }}
+              {...{
+                ...props,
+                setSNList,
+                setMaxZIndex,
+                maxZIndex,
+                info: st,
+                isAppleMode,
+              }}
             />
           );
         })}
@@ -186,7 +213,7 @@ const HOme = ({
   );
 };
 
-export default Board;
+export default BoardContainer;
 
 const StickyNoteMemo = (
   props: TStickyNote & {
@@ -194,6 +221,7 @@ const StickyNoteMemo = (
     setSNList: React.Dispatch<React.SetStateAction<TStickyNote[]>>;
     setMaxZIndex: React.Dispatch<React.SetStateAction<number>>;
     maxZIndex: number;
+    isAppleMode: boolean;
   }
 ) => {
   const Memo = React.useMemo(() => {
@@ -202,13 +230,19 @@ const StickyNoteMemo = (
   return <>{Memo}</>;
 };
 
-const useInterval = ({ onUpdate }) => {
+const useInterval = ({
+  onUpdate,
+  ms,
+}: {
+  onUpdate: () => void;
+  ms?: number;
+}) => {
   const onUpdateRef = React.useRef(() => {});
   React.useEffect(() => {
     onUpdateRef.current = onUpdate;
   }, [onUpdate]);
   React.useEffect(() => {
-    const timerId = setInterval(() => onUpdateRef.current(), 5000);
+    const timerId = setInterval(() => onUpdateRef.current(), ms || 5000);
     return () => clearInterval(timerId);
   }, []);
 };

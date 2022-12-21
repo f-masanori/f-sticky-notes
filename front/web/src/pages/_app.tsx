@@ -5,10 +5,10 @@ import { useRouter } from 'next/router'
 import React from 'react'
 import { Loading } from 's@/core/uiComponents/Loading'
 import { Header } from 's@/core/uiComponents/header'
-import { UserContext, UserProvider } from 's@/core/context/users'
+import { UserContext, UserProvider, UserInfo } from 's@/core/context/users'
 import { auth } from 's@/services/firebase/auth'
 import '@/styles/styles.css'
-
+import { backendApi } from 's@/repository/common'
 import 'tailwindcss/tailwind.css'
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
@@ -26,6 +26,30 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
       })
   }
 
+  const [userInfo, setUserInfo] = React.useState<UserInfo>({ uid: '', email: '', token: '' })
+  const [isAuthVerificationLoading, setIsAuthVerificationLoading] = React.useState(true)
+
+  React.useEffect(() => {
+    onAuthStateChanged(auth, async (user: User | null) => {
+      // Note: User型をimportできなかったためany
+      console.log('onAuthStateChanged')
+      if (user) {
+        const token = await user.getIdToken()
+        const uid = user.uid
+        const email = user.email
+        if (userInfo.uid !== uid) {
+          // TODO: エラーハンドリング
+          const res = await backendApi(uid, token).POST('/loginHistory')
+          setUserInfo({ uid, email: email || '', token })
+        }
+      } else {
+        setUserInfo({ uid: '', email: '', token: '' })
+        router.push('/login')
+      }
+      setIsAuthVerificationLoading(false)
+    })
+  }, [])
+
   const Comp = () => {
     return (
       <>
@@ -38,9 +62,11 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
   }
 
   return (
-    <UserProvider>
+    <UserProvider uid={userInfo.uid} email={userInfo.email}>
       {router.pathname === '/top' ? (
         <Comp />
+      ) : isAuthVerificationLoading ? (
+        <Loading></Loading>
       ) : (
         <AuthStateWrapper path={router.pathname}>
           <Comp />
@@ -53,47 +79,12 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
 export default MyApp
 
 type AuthStateWrapperProps = { children: React.ReactNode; path: string }
+
 const AuthStateWrapper: React.FC<AuthStateWrapperProps> = ({ children, path }) => {
   const router = useRouter()
-  const setUserInfo = React.useContext(UserContext).setUserInfo
   const userInfo = React.useContext(UserContext).userInfo
 
-  const [isAuthVerificationLoading, setIsAuthVerificationLoading] = React.useState(true)
-
-  React.useEffect(() => {
-    onAuthStateChanged(auth, async (user: User | null) => {
-      // Note: User型をimportできなかったためany
-      console.log('onAuthStateChanged')
-      if (user) {
-        const token = await user.getIdToken()
-        const uid = user.uid
-        const email = user.email
-        if (userInfo.uid !== uid) {
-          const res = await fetch(process.env.NEXT_PUBLIC_API_BASE_URL + '/loginHistory', {
-            method: 'POST',
-            mode: 'cors', // no-cors, *cors, same-origin
-            redirect: 'follow', // manual, *follow, error
-            referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-            headers: {
-              'Content-Type': 'application/json',
-              uid: uid,
-              token: token,
-            },
-          })
-          setUserInfo({ uid, email: email || '', token })
-          router.push(path)
-        }
-      } else {
-        if (userInfo.uid !== '') setUserInfo({ uid: '', email: '', token: '' })
-        router.push('/login')
-      }
-      setIsAuthVerificationLoading(false)
-    })
-  }, [])
-
-  if (isAuthVerificationLoading) {
-    return <Loading></Loading>
-  } else if (userInfo.uid === '') {
+  if (userInfo.uid === '') {
     if (router.pathname === '/login') return <>{children}</>
     return <Loading></Loading>
   } else {

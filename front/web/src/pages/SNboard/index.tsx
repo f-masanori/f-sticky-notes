@@ -1,7 +1,7 @@
-import { Board } from 's@/components/SNboard'
+import { BoardContainer } from 's@/components/SNboard'
 
 const SNNoteBoard = () => {
-  return <Board />
+  return <BoardContainer />
 }
 
 export default SNNoteBoard

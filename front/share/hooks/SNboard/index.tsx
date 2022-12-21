@@ -24,12 +24,12 @@ export const useBoard = () => {
   const userInfo = React.useContext(UserContext).userInfo;
   const uid = userInfo.uid;
   const token = userInfo.token;
-  const data = useSNFetcher({ uid, token });
   React.useEffect(() => {
-    if (data !== undefined) {
+    (async () => {
+      const data = await backendApi(uid, token).GET("/stickyNote");
       setSNList(data.result);
-    }
-  }, [data]);
+    })();
+  }, []);
   const [SNList, setSNList] = React.useState<TStickyNote[]>(undefined);
   const [savedCount, setSavedCount] = React.useState(0);
 
@@ -51,11 +51,6 @@ export const useBoard = () => {
       setSavedCount((v) => v + 1);
     }
   };
-
-  React.useEffect(() => {
-    if (SNList !== undefined) {
-    }
-  }, [SNList]);
 
   const [currentGroup, setCurrentGroup] = React.useState<
     SidebarProps["currentGroup"]
@@ -87,13 +82,4 @@ export const useBoard = () => {
     SNGroupList,
     currentGroup,
   };
-};
-
-export const useSNFetcher = ({ uid, token }: GetSNProps) => {
-  // TODO: エラーハンドリング
-  const { data, error } = useSWR(
-    ["/stickyNote", { uid, token }],
-    backendApi("/stickyNote", uid, token).GET
-  );
-  return data;
 };
