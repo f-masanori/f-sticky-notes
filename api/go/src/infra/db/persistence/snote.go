@@ -24,8 +24,6 @@ func (r *SNRepositoryImpl) FetchNotes(uid string) (*[]models.StickyNotes, error)
 		return nil, result.Error
 	}
 
-	fmt.Println(result)
-
 	return &result, nil
 }
 
