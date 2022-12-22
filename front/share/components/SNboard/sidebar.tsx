@@ -52,79 +52,85 @@ export const Sidebar = ({
   return (
     <>
       {isSidebarOpen ? (
-        <div
-          className="w-64 h-full fixed"
-          style={{ zIndex: "9999999" }}
-          aria-label="Sidebar"
-        >
-          <div className="h-[700px] overflow-y-auto py-1 px-1 ml-1 mb-1 bg-gray-50 rounded dark:bg-gray-800">
-            <ul className="space-y-1">
-              {SNGroupList.map((v) => {
-                return (
-                  <li
-                    key={v.id}
-                    className={
-                      v.id === currentGroup.id
-                        ? "bg-amber-200 list-none"
-                        : "hover:bg-amber-100 list-none"
-                    }
-                  >
-                    {editingGroupID === v.id ? (
-                      <ClickAwayListener onClickAway={clearEditing}>
-                        <input
-                          className={"mt-1 mb-1 ml-2 "}
-                          value={v.label}
-                          onChange={(e) =>
-                            changeGroupName({
-                              id: v.id,
-                              label: e.currentTarget.value,
-                            })
-                          }
-                          onBlur={() => {
-                            handleGroupNameOnBlur({
-                              groupID: v.id,
-                              groupLabel: v.label,
-                            });
-                          }}
-                          ref={groupNameInputRef}
-                        />
-                      </ClickAwayListener>
-                    ) : (
-                      <div css={tagliteral} className="flex justify-between">
-                        <a
-                          onClick={() => handleGroupLabel(v)}
-                          href="#"
-                          className={`flex items-center p-1 text-base font-normal text-gray-900 rounded-lg dark:text-white 
+        <div aria-label="Sidebar">
+          <div className="h-[432px] overflow-y-auto py-1 px-1 ml-1 mb-1 bg-gray-50 roun>ded dark:bg-gray-800">
+            <div>
+              <div>
+                <span className="font-bold">ボード</span>
+              </div>
+              <div className="h-[376px] overflow-y-auto ml-1 bg-slate-100">
+                <ul className="space-y-1 h-[100px]">
+                  {(SNGroupList || []).map((v) => {
+                    return (
+                      <li
+                        key={v.id}
+                        className={
+                          v.id === currentGroup.id
+                            ? "bg-amber-200 list-none"
+                            : "hover:bg-amber-100 list-none"
+                        }
+                      >
+                        {editingGroupID === v.id ? (
+                          <ClickAwayListener onClickAway={clearEditing}>
+                            <input
+                              className={"mt-1 mb-1 ml-2 "}
+                              value={v.label}
+                              onChange={(e) =>
+                                changeGroupName({
+                                  id: v.id,
+                                  label: e.currentTarget.value,
+                                })
+                              }
+                              onBlur={() => {
+                                handleGroupNameOnBlur({
+                                  groupID: v.id,
+                                  groupLabel: v.label,
+                                });
+                              }}
+                              ref={groupNameInputRef}
+                            />
+                          </ClickAwayListener>
+                        ) : (
+                          <div
+                            css={tagliteral}
+                            className="flex justify-between"
+                          >
+                            <a
+                              onClick={() => handleGroupLabel(v)}
+                              href="#"
+                              className={`flex items-center p-1 text-base font-normal text-gray-900 rounded-lg dark:text-white 
                       dark:hover:bg-gray-700 flex-grow`}
-                        >
-                          <span className="">{v.label}</span>
-                        </a>
-                        <SettingButton
-                          groupID={v.id}
-                          renameBtnHandler={(gid) => {
-                            setEditing(gid);
-                          }}
-                        />
-                      </div>
-                    )}
-                  </li>
-                );
-              })}
-              <li className={"p-0 list-none"}>
-                <button
-                  className="flex justify-items-center items-center  w-full h-6 bg-stone-200 
+                            >
+                              <span className="">{v.label}</span>
+                            </a>
+                            <SettingButton
+                              groupID={v.id}
+                              renameBtnHandler={(gid) => {
+                                setEditing(gid);
+                              }}
+                            />
+                          </div>
+                        )}
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            </div>
+            <div className={"p-0 list-none"}>
+              <button
+                className="flex justify-items-center items-center  w-full h-6 bg-stone-200 
                    hover:bg-amber-100"
-                  onClick={createGroup}
-                >
-                  <div className="flex justify-center items-center  w-full">
-                    <HiOutlinePlusCircle
-                      size={20}
-                      className="text-yellow-700 hover:text-amber-700"
-                    />
-                  </div>
-                </button>
-              </li>
-            </ul>
+                onClick={createGroup}
+              >
+                <div className="flex justify-center items-center  w-full">
+                  <HiOutlinePlusCircle
+                    size={20}
+                    className="text-yellow-700 hover:text-amber-700"
+                  />
+                </div>
+              </button>
+            </div>
           </div>
         </div>
       ) : (
