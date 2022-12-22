@@ -13,19 +13,6 @@ import 'tailwindcss/tailwind.css'
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   const router = useRouter()
-
-  const clickLogout = async () => {
-    signOut(auth)
-      .then(() => {
-        router.push('/SNboard')
-        location.reload()
-        console.log('Logged out successfully')
-      })
-      .catch((error) => {
-        console.log(`An error occurred  (${error})`)
-      })
-  }
-
   const [userInfo, setUserInfo] = React.useState<UserInfo>({ uid: '', email: '', token: '' })
   const [isAuthVerificationLoading, setIsAuthVerificationLoading] = React.useState(true)
 
@@ -50,10 +37,26 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
     })
   }, [])
 
+  const clickLogout = async () => {
+    signOut(auth)
+      .then(() => {
+        router.push('/SNboard')
+        location.reload()
+        console.log('Logged out successfully')
+      })
+      .catch((error) => {
+        console.log(`An error occurred  (${error})`)
+      })
+  }
+
+  const clickLogin=()=>{
+    router.push('/login')
+  }
+  
   const Comp = () => {
     return (
       <>
-        <Header clickLogout={clickLogout} clickLogin={() => router.push('/login')} />
+        <Header clickLogout={clickLogout} clickLogin={clickLogin} />
         <div className='mt-14'>
           <Component {...pageProps} />
         </div>
@@ -86,6 +89,7 @@ const AuthStateWrapper: React.FC<AuthStateWrapperProps> = ({ children, path }) =
 
   if (userInfo.uid === '') {
     if (router.pathname === '/login') return <>{children}</>
+    router.push('/login')
     return <Loading></Loading>
   } else {
     if (router.pathname === '/login') {
