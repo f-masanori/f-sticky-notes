@@ -1,12 +1,20 @@
 package main
 
 import (
+	"context"
+	"errors"
+	"fmt"
+	"os"
+	"path/filepath"
 	"time"
 
+	firebase "firebase.google.com/go"
 	"github.com/f-masanori/linqumate-auth/src/config"
 	"github.com/f-masanori/linqumate-auth/src/infra/db"
 	"github.com/f-masanori/linqumate-auth/src/interface/handler/api"
 	"github.com/gin-contrib/cors"
+	"github.com/joho/godotenv"
+	"google.golang.org/api/option"
 
 	pers "github.com/f-masanori/linqumate-auth/src/infra/db/persistence"
 
@@ -51,21 +59,56 @@ func getRouter(useCases UseCases) *gin.Engine {
 		MaxAge: 24 * time.Hour,
 	}))
 
-	r.GET("/stickyNote", api.GETStickyNoteHandler(useCases.StickyNote))
-	r.POST("/stickyNote", api.POSTStickyNoteHandler(useCases.StickyNote))
-	r.PUT("/stickyNote", api.PUTStickyNoteHandler(useCases.StickyNote))
+	authGroup := r.Group("/")
+	authGroup.Use(authMiddleware())
+	{
+		authGroup.GET("/stickyNote", api.GETStickyNoteHandler(useCases.StickyNote))
+		authGroup.POST("/stickyNote", api.POSTStickyNoteHandler(useCases.StickyNote))
+		authGroup.PUT("/stickyNote", api.PUTStickyNoteHandler(useCases.StickyNote))
 
-	// r.PUT("/loginHistory", api.PUTStickyNoteHandler(useCases.StickyNote))
-	r.POST("/loginHistory", api.POSTLoginHistoryHandler(useCases.LoginHistory, useCases.StickyNote, useCases.StickyNoteGroups))
+		authGroup.POST("/loginHistory", api.POSTLoginHistoryHandler(useCases.LoginHistory, useCases.StickyNote, useCases.StickyNoteGroups))
 
-	r.GET("/stickyNoteGroups", api.GETStickyNoteGroupHandler(useCases.StickyNoteGroups))
-	r.POST("/stickyNoteGroups", api.POSTStickyNoteGroupHandler(useCases.StickyNoteGroups))
-	r.PUT("/stickyNoteGroups", api.PUTStickyNoteGroupHandler(useCases.StickyNoteGroups))
+		authGroup.GET("/stickyNoteGroups", api.GETStickyNoteGroupHandler(useCases.StickyNoteGroups))
+		authGroup.POST("/stickyNoteGroups", api.POSTStickyNoteGroupHandler(useCases.StickyNoteGroups))
+		authGroup.PUT("/stickyNoteGroups", api.PUTStickyNoteGroupHandler(useCases.StickyNoteGroups))
+	}
 
-	r.OPTIONS("/stickyNote", func(c *gin.Context) {
-		api.Wshandler(c.Writer, c.Request)
-	})
 	return r
+}
+
+func authMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		// TODO
+		return
+
+		if os.Getenv("ENV") == "local" {
+			return
+		}
+		uid := c.Request.Header.Get("uid")
+		token := c.Request.Header.Get("token")
+		if uid == "" || token == "" {
+			api.ErrorResponse(c, "ok", errors.New("認証に失敗しました。"))
+			return
+		}
+
+		exe, err := os.Executable()
+		fmt.Println(filepath.Dir(exe))
+		fmt.Println(os.Getenv("ENV"))
+		serviceAccountKeyPath := ""
+		if os.Getenv("ENV") == "local" {
+			serviceAccountKeyPath = filepath.Join(filepath.Dir(filepath.Dir(exe)), "secrets", "gcp-learn-project-366613-firebase-adminsdk-7zvfn-a44d2c2d52.json")
+		} else {
+			// TODO:
+		}
+		opt := option.WithCredentialsFile(serviceAccountKeyPath)
+		app, err := firebase.NewApp(context.Background(), nil, opt)
+		app.Auth(c)
+		if err != nil {
+			fmt.Errorf("error initializing app: %v", err)
+			return
+		}
+		godotenv.Load(".env")
+	}
 }
 
 type UseCases struct {
@@ -75,10 +118,13 @@ type UseCases struct {
 }
 
 func inject() UseCases {
-	authDB := db.GetDBConnection()
-	SNUseCase := usecase.NewSNUseCase(pers.NewSNRepositoryImpl(authDB))
-	SNGroupUseCase := usecase.NewSNGroupUseCase(pers.NewSNGroupRepositoryImpl(authDB))
-	LoginHistory := usecase.NewLoginHistoryUseCase(pers.NewLoginHistoryRepositoryImpl(authDB))
+	RDB := db.GetDBConnection()
+	SNRepo := pers.NewSNRepositoryImpl(RDB)
+	SNGroupRepo := pers.NewSNGroupRepositoryImpl(RDB)
+	LHRepo := pers.NewLoginHistoryRepositoryImpl(RDB)
+	SNUseCase := usecase.NewSNUseCase(SNRepo)
+	SNGroupUseCase := usecase.NewSNGroupUseCase(SNGroupRepo, SNRepo)
+	LoginHistory := usecase.NewLoginHistoryUseCase(LHRepo)
 
 	u := UseCases{
 		StickyNote:       SNUseCase,

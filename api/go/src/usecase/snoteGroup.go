@@ -6,11 +6,12 @@ import (
 )
 
 type SNGroupUseCase struct {
-	repo repository.SNGroupRepository
+	repo   repository.SNGroupRepository
+	SNrepo repository.SNRepository
 }
 
-func NewSNGroupUseCase(repo repository.SNGroupRepository) SNGroupUseCase {
-	useCase := SNGroupUseCase{repo: repo}
+func NewSNGroupUseCase(repo repository.SNGroupRepository, SNrepo repository.SNRepository) SNGroupUseCase {
+	useCase := SNGroupUseCase{repo: repo, SNrepo: SNrepo}
 	return useCase
 }
 
