@@ -6,6 +6,8 @@ import { UserContext } from "../../core/context/users";
 import { updateSN, getGroup, updateGroup } from "../../repository/stickyNotes";
 import { SidebarProps } from "../../components/SNboard/sidebar";
 import { backendApi } from "../../repository/common";
+import { createSN, createGroup } from "../../repository/stickyNotes";
+import { getNewSNID } from "../../utils/newID";
 
 export type GetSNProps = {
   uid: string;
@@ -26,9 +28,13 @@ export const useBoard = () => {
   });
   const [SNGroupList, setSNGroupList] =
     React.useState<SidebarProps["SNGroupList"]>(undefined);
+  const [isSidebarOpen, setIsSidebarOpen] = React.useState(true);
+  const [isAppleMode, setIsAppleMode] = React.useState(true);
+  const [maxZIndex, setMaxZIndex] = React.useState(0);
 
   React.useEffect(() => {
     (async () => {
+      console.log(uid);
       const data = await backendApi(uid, token).GET("/stickyNote");
       setSNList(data.result);
     })();
@@ -54,7 +60,6 @@ export const useBoard = () => {
   };
 
   const changeGroupName = ({ id, label }) => {
-    console.log(id, label);
     setSNGroupList((v) =>
       v.map((x) => {
         if (x.id === id) return { ...x, label };
@@ -62,8 +67,6 @@ export const useBoard = () => {
       })
     );
   };
-
-  const [maxZIndex, setMaxZIndex] = React.useState(0);
 
   const handleGroupNameOnBlur = ({ groupID, groupLabel }) => {
     updateGroup({ uid, token, groupID, groupLabel });
@@ -91,19 +94,57 @@ export const useBoard = () => {
     })();
   }, []);
 
+  const handleCreateGroup = async () => {
+    const g = await createGroup({ uid, token });
+    const newGroup = g.result;
+    setSNGroupList((v) => [...v, newGroup]);
+  };
+  const handleCreateSN = () => {
+    const newSN: TStickyNote = {
+      id: getNewSNID(), //TODO: サーバーサイドで付番する
+      groupID: currentGroup.id,
+      value:
+        '{"root":{"children":[{"children":[{"detail":0,"format":0,"mode":"normal","style":"","text":"","type":"text","version":1}],"direction":"ltr","format":"","indent":0,"type":"paragraph","version":1}],"direction":"ltr","format":"","indent":0,"type":"root","version":1}}',
+      width: "200px",
+      height: "200px",
+      x: 200,
+      y: 400,
+      zIndex: 0,
+      willSave: false,
+    };
+    createSN({
+      uid,
+      token,
+      st: newSN,
+    });
+    setSNList((v) => [...v, newSN]);
+  };
+  const handleGroupLabelOnClick = (p: SidebarProps["currentGroup"]) =>
+    setCurrentGroup(p);
+
+  const shownSNList = (SNList || []).filter(
+    (v) => v.groupID === currentGroup.id
+  );
+
+  const onClickAppleModeToggle = () => setIsAppleMode(!isAppleMode);
   return {
-    uid,
-    token,
-    SNList,
     setSNList,
     changeGroupName,
-    setSNGroupList,
-    setCurrentGroup,
-    SNGroupList,
-    currentGroup,
     setMaxZIndex,
-    maxZIndex,
     handleGroupNameOnBlur,
+    setIsSidebarOpen,
+    handleCreateGroup,
+    handleGroupLabelOnClick,
+    handleCreateSN,
+    onClickAppleModeToggle,
+    shownSNList,
+    state: {
+      SNGroupList,
+      maxZIndex,
+      isAppleMode,
+      isSidebarOpen,
+      currentGroup,
+    },
   };
 };
 

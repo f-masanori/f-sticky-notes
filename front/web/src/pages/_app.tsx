@@ -49,10 +49,10 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
       })
   }
 
-  const clickLogin=()=>{
+  const clickLogin = () => {
     router.push('/login')
   }
-  
+
   const Comp = () => {
     return (
       <>
@@ -89,7 +89,6 @@ const AuthStateWrapper: React.FC<AuthStateWrapperProps> = ({ children, path }) =
 
   if (userInfo.uid === '') {
     if (router.pathname === '/login') return <>{children}</>
-    router.push('/login')
     return <Loading></Loading>
   } else {
     if (router.pathname === '/login') {
